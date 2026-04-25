@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Diario de Actividades</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #0d6e3f;
+  --green-mid: #1a8a52;
+  --green-light: #eaf6f0;
+  --green-dark: #074d2c;
+  --amber: #b8610a;
+  --amber-light: #fff4e6;
+  --blue: #0d4f8a;
+  --blue-light: #e6f0fb;
+  --red: #b81a1a;
+  --red-light: #fdeaea;
+  --gray: #455a64;
+  --gray-light: #f1f4f5;
+  --border: #c8d6d0;
+  --white: #ffffff;
+  --text: #1a2e24;
+  --text-muted: #607060;
+  --bg: #f4f7f5;
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text);
+}
+
+/* TOP BAR */
+.topbar {
+  background: var(--green-dark);
+  color: white;
+  padding: 0 24px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  opacity: 0.9;
+}
+.topbar-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  margin-left: auto;
+}
+
+/* HERO */
+.hero {
+  background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
+  color: white;
+  padding: 32px 24px 28px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  right: -40px; top: -40px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  border: 40px solid rgba(255,255,255,0.05);
+}
+.hero h1 { font-size: 22px; font-weight: 700; line-height: 1.2; }
+.hero p { font-size: 13px; opacity: 0.75; margin-top: 6px; max-width: 500px; }
+.hero-badge {
+  display: inline-block;
+  margin-top: 12px;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* FORM CONTAINER */
+.container { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
+
+/* SECTIONS */
+.section {
+  background: var(--white);
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.section-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--gray-light);
+}
+.section-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: var(--green);
+  color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--gray);
+}
+.section-body { padding: 20px; }
+
+/* FORM CONTROLS */
+.row { margin-bottom: 16px; }
+.row:last-child { margin-bottom: 0; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 5px;
+}
+label .req { color: var(--red); margin-left: 2px; }
+label .hint { color: var(--text-muted); font-weight: 400; font-size: 11px; margin-left: 4px; }
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  color: var(--text);
+  background: white;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--green-mid);
+  box-shadow: 0 0 0 3px rgba(26,138,82,0.1);
+}
+textarea { resize: vertical; min-height: 80px; }
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23607060' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* RADIO BUTTONS – LUGAR */
+.radio-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.radio-card {
+  padding: 14px 16px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: center;
+  user-select: none;
+}
+.radio-card:hover { border-color: var(--green-mid); background: var(--green-light); }
+.radio-card.sel { border-color: var(--green); background: var(--green-light); }
+.radio-card .rc-icon { font-size: 24px; display: block; margin-bottom: 4px; }
+.radio-card .rc-label { font-size: 14px; font-weight: 600; color: var(--text); }
+.radio-card .rc-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.radio-card.sel .rc-label { color: var(--green); }
+
+/* ACTIVIDAD CARD */
+.act-card {
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 12px;
+  background: var(--gray-light);
+  position: relative;
+}
+.act-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 14px;
+}
+.act-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--green-dark); color: white;
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.act-name { font-size: 13px; font-weight: 600; color: var(--text); }
+.act-remove {
+  margin-left: auto;
+  background: none; border: 1px solid #e0a0a0; border-radius: 6px;
+  color: var(--red); font-size: 12px; font-weight: 600;
+  padding: 3px 8px; cursor: pointer;
+  transition: background 0.15s;
+}
+.act-remove:hover { background: var(--red-light); }
+
+.sub-label {
+  font-size: 11px; font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.avance-block { margin-top: 10px; }
+
+.divider { height: 1px; background: var(--border); margin: 14px 0; }
+
+/* BOTÓN AGREGAR */
+.add-act-btn {
+  width: 100%;
+  padding: 11px;
+  border: 2px dashed var(--green-mid);
+  border-radius: 10px;
+  background: none;
+  color: var(--green);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  margin-top: 4px;
+}
+.add-act-btn:hover { background: var(--green-light); border-style: solid; }
+
+/* SUBMIT */
+.submit-wrap { margin-top: 20px; }
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--green-dark);
+  color: white;
+  border: none;
+  border-radius: 11px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.3px;
+  transition: background 0.15s, transform 0.1s;
+}
+.submit-btn:hover { background: var(--green); }
+.submit-btn:active { transform: scale(0.99); }
+
+/* SUCCESS */
+.success-screen {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+.success-screen.vis { display: block; }
+.success-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--green-light);
+  border: 3px solid var(--green-mid);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 28px;
+}
+.success-screen h2 { font-size: 18px; font-weight: 700; color: var(--green-dark); }
+.success-screen p { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+.reset-btn {
+  margin-top: 20px;
+  padding: 10px 24px;
+  background: var(--green); color: white;
+  border: none; border-radius: 8px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.reset-btn:hover { background: var(--green-mid); }
+
+/* HIDDEN */
+.hidden { display: none !important; }
+
+/* MOBILE */
+@media(max-width: 480px) {
+  .hero h1 { font-size: 18px; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .radio-cards { grid-template-columns: 1fr 1fr; }
+  .container { padding: 16px 12px 48px; }
+}
+
+/* PROGRESS BAR */
+.progress-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: rgba(255,255,255,0.8);
+  width: 0%;
+  transition: width 0.4s ease;
+  border-radius: 2px;
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">■ GEOLOGÍA</div>
+  <div class="topbar-title">Reporte Diario · Auxiliares de Campo</div>
+</div>
+
+<div class="hero">
+  <div class="progress-bar"><div class="progress-fill" id="progressBar"></div></div>
+  <div style="height:1px;"></div>
+  <h1>Reporte de Actividades<br>Diarias</h1>
+  <p>Complete este formulario al finalizar su jornada. Todos los campos marcados con * son obligatorios.</p>
+  <span class="hero-badge">SIN LOGIN · ACCESO LIBRE</span>
+</div>
+
+<div class="container">
+
+  <!-- FORMULARIO PRINCIPAL -->
+  <div id="mainForm">
+
+    <!-- DATOS GENERALES -->
+    <div class="section" id="sec-general">
+      <div class="section-head">
+        <div class="section-icon">①</div>
+        <div class="section-label">Datos Generales</div>
+      </div>
+      <div class="section-body">
+        <div class="grid-2">
+          <div class="row">
+            <label>Fecha <span class="req">*</span></label>
+            <input type="date" id="f-fecha">
+          </div>
+          <div class="row">
+            <label>Nombre completo <span class="req">*</span></label>
+            <input type="text" id="f-nombre" placeholder="Su nombre y apellido">
+          </div>
+        </div>
+        <div class="row">
+          <label>Grupo <span class="req">*</span></label>
+          <select id="f-grupo">
+            <option value="">-- Seleccionar grupo --</option>
+            <option>Remedios</option>
+            <option>Santa Isabel</option>
+            <option>Hangar</option>
+          </select>
+        </div>
+        <div class="row">
+          <label>Lugar de trabajo <span class="req">*</span></label>
+          <div class="radio-cards">
+            <div class="radio-card" id="rc-campo" onclick="selectLugar('Campo')">
+              <span class="rc-icon">⛏️</span>
+              <div class="rc-label">Campo</div>
+              <div class="rc-sub">Trabajo en terreno</div>
+            </div>
+            <div class="radio-card" id="rc-hangar" onclick="selectLugar('Hangar')">
+              <span class="rc-icon">🏗️</span>
+              <div class="rc-label">Hangar</div>
+              <div class="rc-sub">Trabajo en instalación</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVIDADES (aparece al seleccionar lugar) -->
+    <div class="section hidden" id="sec-actividades">
+      <div class="section-head">
+        <div class="section-icon">②</div>
+        <div class="section-label" id="act-section-label">Actividades Realizadas</div>
+      </div>
+      <div class="section-body">
+        <div id="actividades-wrap"></div>
+        <button class="add-act-btn" onclick="addActividad()">+ Agregar otra actividad</button>
+      </div>
+    </div>
+
+    <!-- COMENTARIOS -->
+    <div class="section hidden" id="sec-comentarios">
+      <div class="section-head">
+        <div class="section-icon">③</div>
+        <div class="section-label">Comentarios y Novedades</div>
+      </div>
+      <div class="section-body">
+        <div class="row">
+          <label>Observaciones del día <span class="hint">(opcional)</span></label>
+          <textarea id="f-comentarios" placeholder="Novedades, inconvenientes, observaciones adicionales..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBMIT -->
+    <div class="submit-wrap hidden" id="sec-submit">
+      <button class="submit-btn" onclick="submitForm()">Enviar Reporte ›</button>
+    </div>
+
+  </div><!-- /mainForm -->
+
+  <!-- PANTALLA DE ÉXITO -->
+  <div class="success-screen" id="successScreen">
+    <div class="section" style="padding:0; overflow:visible;">
+      <div class="section-body" style="text-align:center; padding:40px 24px;">
+        <div class="success-icon">✓</div>
+        <h2>Reporte enviado correctamente</h2>
+        <p>Su reporte del día ha sido registrado.<br>El equipo de supervisión puede verlo en el panel de reportes.</p>
+        <div id="resumen-box" style="margin-top:20px; text-align:left; background:var(--gray-light); border-radius:10px; padding:14px 16px; font-size:12px; color:var(--text-muted); border:1px solid var(--border);">
+        </div>
+        <button class="reset-btn" onclick="resetForm()">Enviar otro reporte</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ─── CONFIGURACIÓN DE ACTIVIDADES (editable por jefes) ───────────────────────
+// Para agregar o quitar actividades, modifique estas listas:
+const ACTIVIDADES = {
+  campo: [
+    { id:'SP', nombre:'Suelos Profundos',        avance:'cantidad' },
+    { id:'SR', nombre:'Suelos Regionales',        avance:'cantidad' },
+    { id:'HT', nombre:'Hacer Trincheras',          avance:'trinchera' },
+    { id:'TT', nombre:'Tapar Trinchera',           avance:'trinchera' },
+    { id:'DT', nombre:'Destapar Talud',            avance:'metros' },
+    { id:'HTU',nombre:'Habilitación de Túneles',  avance:'metros' },
+    { id:'LC', nombre:'Lavar Cajas',               avance:'cajas' },
+    { id:'OC', nombre:'Organizar Cajas',           avance:'cajas' },
+  ],
+  hangar: [
+    { id:'LC', nombre:'Lavar Cajas' },
+    { id:'OC', nombre:'Organizar Cajas' },
+    { id:'MN', nombre:'Mina' },
+    { id:'FO', nombre:'Fotos' },
+    { id:'RQ', nombre:'RQD' },
+    { id:'MM', nombre:'Metro/Metro' },
+    { id:'MA', nombre:'Macerar' },
+    { id:'BA', nombre:'Batear' },
+    { id:'CN', nombre:'Corte de Núcleos' },
+    { id:'CU', nombre:'Cuartear' },
+    { id:'QA', nombre:'QA/QC y Rechazos' },
+    { id:'AH', nombre:'Adecuación de Herramientas' },
+    { id:'PM', nombre:'Preparación de Muestras' },
+    { id:'PC', nombre:'Peso de Muestras Concentrados' },
+    { id:'PS', nombre:'Peso de Muestras Suelos Corte con Pulidora' },
+    { id:'OT', nombre:'Otra actividad', esOtra:true },
+  ]
+};
+
+// ─── ESTADO ──────────────────────────────────────────────────────────────────
+let lugar = null;
+let actCount = 0;
+let reportes = JSON.parse(localStorage.getItem('rpts_geo') || '[]');
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0];
+
+function updateProgress() {
+  const steps = [
+    document.getElementById('f-fecha').value,
+    document.getElementById('f-nombre').value.trim(),
+    document.getElementById('f-grupo').value,
+    lugar
+  ].filter(Boolean).length;
+  document.getElementById('progressBar').style.width = (steps / 4 * 100) + '%';
+}
+['f-fecha','f-nombre','f-grupo'].forEach(id =>
+  document.getElementById(id).addEventListener('input', updateProgress));
+
+// ─── LUGAR ────────────────────────────────────────────────────────────────────
+function selectLugar(l) {
+  lugar = l;
+  ['campo','hangar'].forEach(x => {
+    document.getElementById('rc-'+x).classList.toggle('sel', x === l.toLowerCase());
+  });
+  document.getElementById('act-section-label').textContent = 'Actividades Realizadas – ' + l;
+  document.getElementById('sec-actividades').classList.remove('hidden');
+  document.getElementById('sec-comentarios').classList.remove('hidden');
+  document.getElementById('sec-submit').classList.remove('hidden');
+  document.getElementById('actividades-wrap').innerHTML = '';
+  actCount = 0;
+  addActividad();
+  updateProgress();
+  document.getElementById('sec-actividades').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ─── AGREGAR ACTIVIDAD ────────────────────────────────────────────────────────
+function addActividad() {
+  actCount++;
+  const id = actCount;
+  const acts = ACTIVIDADES[lugar.toLowerCase()];
+  const opts = acts.map(a => `<option value="${a.id}">${a.nombre}</option>`).join('');
+  const isHangar = lugar === 'Hangar';
+
+  const div = document.createElement('div');
+  div.className = 'act-card';
+  div.id = 'act-card-' + id;
+  div.innerHTML = `
+    <div class="act-header">
+      <div class="act-num">${id}</div>
+      <div class="act-name">Actividad #${id}</div>
+      ${id > 1 ? `<button class="act-remove" onclick="removeActividad(${id})">Eliminar</button>` : ''}
+    </div>
+
+    <div class="row">
+      <label>Tipo de actividad <span class="req">*</span></label>
+      <select id="act${id}-tipo" onchange="onActChange(${id})">
+        <option value="">-- Seleccionar --</option>
+        ${opts}
+      </select>
+    </div>
+
+    <div id="act${id}-avance-wrap" class="hidden avance-block"></div>
+
+    ${isHangar ? `
+    <div class="row hidden" id="act${id}-otra-wrap">
+      <label>Descripción de la otra actividad <span class="req">*</span></label>
+      <input type="text" id="act${id}-otra" placeholder="Escriba la actividad realizada...">
+    </div>
+    <div class="row" id="act${id}-avance-hangar-wrap" style="display:none;">
+      <label>Avance</label>
+      <input type="text" id="act${id}-avance-hangar" placeholder="Describa el avance logrado...">
+    </div>
+    ` : ''}
+
+    <div class="divider"></div>
+    <div class="grid-2">
+      <div>
+        <div class="sub-label">Número de auxiliares</div>
+        <input type="number" id="act${id}-naux" min="1" placeholder="1">
+      </div>
+      <div>
+        <div class="sub-label">Horas empleadas</div>
+        <input type="number" id="act${id}-horas" min="0" step="0.5" placeholder="0.0">
+      </div>
+    </div>
+  `;
+  document.getElementById('actividades-wrap').appendChild(div);
+}
+
+function removeActividad(id) {
+  const el = document.getElementById('act-card-' + id);
+  if (el) el.remove();
+}
+
+// ─── CAMBIO DE ACTIVIDAD ──────────────────────────────────────────────────────
+function onActChange(id) {
+  const selEl = document.getElementById('act'+id+'-tipo');
+  const actId = selEl.value;
+  const acts = ACTIVIDADES[lugar.toLowerCase()];
+  const act = acts.find(a => a.id === actId);
+
+  const wrap = document.getElementById('act'+id+'-avance-wrap');
+
+  if (lugar === 'Campo' && act) {
+    wrap.classList.remove('hidden');
+    let html = '';
+    if (act.avance === 'cantidad') {
+      html = `<div class="sub-label">Cantidad de suelos realizados</div>
+              <input type="number" id="act${id}-avance" min="0" placeholder="0">`;
+    } else if (act.avance === 'trinchera') {
+      html = `<div class="sub-label">Medidas de trinchera</div>
+              <div class="grid-3" style="margin-top:6px;">
+                <div><div class="sub-label">Largo (m)</div><input type="number" id="act${id}-largo" step="0.1" min="0" placeholder="0.0"></div>
+                <div><div class="sub-label">Ancho (m)</div><input type="number" id="act${id}-ancho" step="0.1" min="0" placeholder="0.0"></div>
+                <div><div class="sub-label">Profundo (m)</div><input type="number" id="act${id}-prof" step="0.1" min="0" placeholder="0.0"></div>
+              </div>`;
+    } else if (act.avance === 'metros') {
+      html = `<div class="sub-label">Metros avanzados</div>
+              <input type="number" id="act${id}-avance" step="0.1" min="0" placeholder="0.0">`;
+    } else if (act.avance === 'cajas') {
+      html = `<div class="sub-label">Número de cajas</div>
+              <input type="number" id="act${id}-avance" min="0" placeholder="0">`;
+    }
+    wrap.innerHTML = html;
+  }
+
+  if (lugar === 'Hangar') {
+    const otraWrap = document.getElementById('act'+id+'-otra-wrap');
+    const avWrap = document.getElementById('act'+id+'-avance-hangar-wrap');
+    if (otraWrap) otraWrap.classList.toggle('hidden', act ? !act.esOtra : true);
+    if (avWrap) avWrap.style.display = act ? 'block' : 'none';
+  }
+}
+
+// ─── ENVIAR FORMULARIO ────────────────────────────────────────────────────────
+function submitForm() {
+  // Validaciones básicas
+  const fecha   = document.getElementById('f-fecha').value;
+  const nombre  = document.getElementById('f-nombre').value.trim();
+  const grupo   = document.getElementById('f-grupo').value;
+
+  if (!fecha || !nombre || !grupo || !lugar) {
+    alert('Por favor complete todos los campos obligatorios (fecha, nombre, grupo y lugar de trabajo).');
+    return;
+  }
+
+  const comentario = document.getElementById('f-comentarios').value.trim();
+  const acts = ACTIVIDADES[lugar.toLowerCase()];
+  const registros = [];
+  let valido = true;
+
+  document.querySelectorAll('.act-card').forEach(card => {
+    const numMatch = card.id.match(/act-card-(\d+)/);
+    if (!numMatch) return;
+    const i = numMatch[1];
+    const tipoId = document.getElementById('act'+i+'-tipo')?.value;
+    if (!tipoId) { valido = false; return; }
+
+    const actDef = acts.find(a => a.id === tipoId);
+    if (!actDef) return;
+
+    let avance = '';
+    let tipoNombre = actDef.nombre;
+
+    if (lugar === 'Campo') {
+      const largoEl = document.getElementById('act'+i+'-largo');
+      if (largoEl) {
+        const l = largoEl.value || '0';
+        const a = document.getElementById('act'+i+'-ancho')?.value || '0';
+        const p = document.getElementById('act'+i+'-prof')?.value || '0';
+        avance = `Largo: ${l}m | Ancho: ${a}m | Prof: ${p}m`;
+      } else {
+        avance = document.getElementById('act'+i+'-avance')?.value || '';
+      }
+    } else {
+      avance = document.getElementById('act'+i+'-avance-hangar')?.value || '';
+      if (actDef.esOtra) {
+        tipoNombre = 'Otra: ' + (document.getElementById('act'+i+'-otra')?.value || '');
+      }
+    }
+
+    const naux  = document.getElementById('act'+i+'-naux')?.value || '';
+    const horas = document.getElementById('act'+i+'-horas')?.value || '';
+
+    registros.push({ fecha, nombre, lugar, grupo, actividad: tipoNombre, avance, naux, horas, comentario });
+  });
+
+  if (!valido || registros.length === 0) {
+    alert('Asegúrese de seleccionar una actividad en cada bloque.');
+    return;
+  }
+
+  // Guardar localmente
+  registros.forEach(r => { r.ts = new Date().toISOString(); reportes.push(r); });
+  localStorage.setItem('rpts_geo', JSON.stringify(reportes));
+
+  // Opcional: enviar a webhook (Power Automate / Make / n8n)
+  // Descomente y reemplace la URL para activar la integración con SharePoint:
+  /*
+  const WEBHOOK_URL = 'https://prod-XX.westus.logic.azure.com/workflows/XXXX/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=XXXX';
+  fetch(WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reportes: registros })
+  }).catch(err => console.warn('Webhook error:', err));
+  */
+
+  // Mostrar éxito
+  document.getElementById('mainForm').style.display = 'none';
+  const ss = document.getElementById('successScreen');
+  ss.classList.add('vis');
+  document.getElementById('resumen-box').innerHTML = `
+    <strong>Resumen del reporte enviado:</strong><br><br>
+    📅 Fecha: ${fecha}<br>
+    👤 Auxiliar: ${nombre}<br>
+    📍 Lugar: ${lugar} – ${grupo}<br>
+    📋 Actividades: ${registros.length} registradas<br>
+    💬 ${comentario ? 'Con comentarios' : 'Sin comentarios adicionales'}
+  `;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── RESET ────────────────────────────────────────────────────────────────────
+function resetForm() {
+  lugar = null; actCount = 0;
+  document.getElementById('f-nombre').value = '';
+  document.getElementById('f-grupo').value = '';
+  document.getElementById('f-comentarios').value = '';
+  document.getElementById('f-fecha').value = new Date().toISOString().split('T')[0];
+  ['campo','hangar'].forEach(x => document.getElementById('rc-'+x).classList.remove('sel'));
+  ['sec-actividades','sec-comentarios','sec-submit'].forEach(id =>
+    document.getElementById(id).classList.add('hidden'));
+  document.getElementById('actividades-wrap').innerHTML = '';
+  document.getElementById('mainForm').style.display = '';
+  document.getElementById('successScreen').classList.remove('vis');
+  document.getElementById('progressBar').style.width = '0%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
