@@ -34,7 +34,6 @@ body {
   color: var(--text);
 }
 
-/* TOP BAR */
 .topbar {
   background: var(--green-dark);
   color: white;
@@ -61,7 +60,6 @@ body {
   margin-left: auto;
 }
 
-/* HERO */
 .hero {
   background: linear-gradient(135deg, var(--green-dark) 0%, var(--green) 100%);
   color: white;
@@ -92,10 +90,8 @@ body {
   font-family: 'IBM Plex Mono', monospace;
 }
 
-/* FORM CONTAINER */
 .container { max-width: 680px; margin: 0 auto; padding: 24px 16px 48px; }
 
-/* SECTIONS */
 .section {
   background: var(--white);
   border-radius: 14px;
@@ -128,7 +124,6 @@ body {
 }
 .section-body { padding: 20px; }
 
-/* FORM CONTROLS */
 .row { margin-bottom: 16px; }
 .row:last-child { margin-bottom: 0; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -175,7 +170,6 @@ select {
   padding-right: 36px;
 }
 
-/* RADIO BUTTONS – LUGAR */
 .radio-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .radio-card {
   padding: 14px 16px;
@@ -193,7 +187,6 @@ select {
 .radio-card .rc-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
 .radio-card.sel .rc-label { color: var(--green); }
 
-/* ACTIVIDAD CARD */
 .act-card {
   border: 1.5px solid var(--border);
   border-radius: 10px;
@@ -232,10 +225,8 @@ select {
 }
 
 .avance-block { margin-top: 10px; }
-
 .divider { height: 1px; background: var(--border); margin: 14px 0; }
 
-/* BOTÓN AGREGAR */
 .add-act-btn {
   width: 100%;
   padding: 11px;
@@ -252,7 +243,6 @@ select {
 }
 .add-act-btn:hover { background: var(--green-light); border-style: solid; }
 
-/* SUBMIT */
 .submit-wrap { margin-top: 20px; }
 .submit-btn {
   width: 100%;
@@ -271,7 +261,6 @@ select {
 .submit-btn:hover { background: var(--green); }
 .submit-btn:active { transform: scale(0.99); }
 
-/* SUCCESS */
 .success-screen {
   display: none;
   text-align: center;
@@ -298,10 +287,8 @@ select {
 }
 .reset-btn:hover { background: var(--green-mid); }
 
-/* HIDDEN */
 .hidden { display: none !important; }
 
-/* MOBILE */
 @media(max-width: 480px) {
   .hero h1 { font-size: 18px; }
   .grid-2 { grid-template-columns: 1fr; }
@@ -310,7 +297,6 @@ select {
   .container { padding: 16px 12px 48px; }
 }
 
-/* PROGRESS BAR */
 .progress-bar {
   height: 3px;
   background: rgba(255,255,255,0.2);
@@ -343,10 +329,8 @@ select {
 
 <div class="container">
 
-  <!-- FORMULARIO PRINCIPAL -->
   <div id="mainForm">
 
-    <!-- DATOS GENERALES -->
     <div class="section" id="sec-general">
       <div class="section-head">
         <div class="section-icon">①</div>
@@ -390,7 +374,6 @@ select {
       </div>
     </div>
 
-    <!-- ACTIVIDADES (aparece al seleccionar lugar) -->
     <div class="section hidden" id="sec-actividades">
       <div class="section-head">
         <div class="section-icon">②</div>
@@ -402,7 +385,6 @@ select {
       </div>
     </div>
 
-    <!-- COMENTARIOS -->
     <div class="section hidden" id="sec-comentarios">
       <div class="section-head">
         <div class="section-icon">③</div>
@@ -416,14 +398,12 @@ select {
       </div>
     </div>
 
-    <!-- SUBMIT -->
     <div class="submit-wrap hidden" id="sec-submit">
       <button class="submit-btn" onclick="submitForm()">Enviar Reporte ›</button>
     </div>
 
-  </div><!-- /mainForm -->
+  </div>
 
-  <!-- PANTALLA DE ÉXITO -->
   <div class="success-screen" id="successScreen">
     <div class="section" style="padding:0; overflow:visible;">
       <div class="section-body" style="text-align:center; padding:40px 24px;">
@@ -437,11 +417,10 @@ select {
     </div>
   </div>
 
-</div><!-- /container -->
+</div>
 
 <script>
-// ─── CONFIGURACIÓN DE ACTIVIDADES (editable por jefes) ───────────────────────
-// Para agregar o quitar actividades, modifique estas listas:
+// ─── CONFIGURACIÓN DE ACTIVIDADES ─────────────────────────────────────────────
 const ACTIVIDADES = {
   campo: [
     { id:'SP', nombre:'Suelos Profundos',        avance:'cantidad' },
@@ -473,7 +452,10 @@ const ACTIVIDADES = {
   ]
 };
 
-// ─── ESTADO ──────────────────────────────────────────────────────────────────
+// ─── WEBHOOK URL ──────────────────────────────────────────────────────────────
+const WEBHOOK_URL = 'https://hook.us2.make.com/j6ldpn5vlb9pki4t2xqc1ydnjr19xxn9';
+
+// ─── ESTADO ───────────────────────────────────────────────────────────────────
 let lugar = null;
 let actCount = 0;
 let reportes = JSON.parse(localStorage.getItem('rpts_geo') || '[]');
@@ -527,7 +509,6 @@ function addActividad() {
       <div class="act-name">Actividad #${id}</div>
       ${id > 1 ? `<button class="act-remove" onclick="removeActividad(${id})">Eliminar</button>` : ''}
     </div>
-
     <div class="row">
       <label>Tipo de actividad <span class="req">*</span></label>
       <select id="act${id}-tipo" onchange="onActChange(${id})">
@@ -535,9 +516,7 @@ function addActividad() {
         ${opts}
       </select>
     </div>
-
     <div id="act${id}-avance-wrap" class="hidden avance-block"></div>
-
     ${isHangar ? `
     <div class="row hidden" id="act${id}-otra-wrap">
       <label>Descripción de la otra actividad <span class="req">*</span></label>
@@ -548,7 +527,6 @@ function addActividad() {
       <input type="text" id="act${id}-avance-hangar" placeholder="Describa el avance logrado...">
     </div>
     ` : ''}
-
     <div class="divider"></div>
     <div class="grid-2">
       <div>
@@ -575,7 +553,6 @@ function onActChange(id) {
   const actId = selEl.value;
   const acts = ACTIVIDADES[lugar.toLowerCase()];
   const act = acts.find(a => a.id === actId);
-
   const wrap = document.getElementById('act'+id+'-avance-wrap');
 
   if (lugar === 'Campo' && act) {
@@ -611,7 +588,6 @@ function onActChange(id) {
 
 // ─── ENVIAR FORMULARIO ────────────────────────────────────────────────────────
 function submitForm() {
-  // Validaciones básicas
   const fecha   = document.getElementById('f-fecha').value;
   const nombre  = document.getElementById('f-nombre').value.trim();
   const grupo   = document.getElementById('f-grupo').value;
@@ -671,12 +647,15 @@ function submitForm() {
   registros.forEach(r => { r.ts = new Date().toISOString(); reportes.push(r); });
   localStorage.setItem('rpts_geo', JSON.stringify(reportes));
 
-const WEBHOOK_URL = 'https://hook.us2.make.com/j6ldpn5vlb9pki4t2xqc1ydnjr19xxn9';
-  fetch(WEBHOOK_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ reportes: registros })
-  }).catch(err => console.warn('Webhook error:', err));
+  // ── ENVIAR CADA ACTIVIDAD POR SEPARADO A MAKE.COM ──
+  // Cada actividad genera una fila independiente en Google Sheets
+  registros.forEach(registro => {
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(registro)
+    }).catch(err => console.warn('Webhook error:', err));
+  });
 
   // Mostrar éxito
   document.getElementById('mainForm').style.display = 'none';
